@@ -10,11 +10,21 @@ import {
   Mic,
 } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { db } from "./firebase";
 
 function Chat() {
   const [seed, setSeed] = useState("");
   const [input, setInput] = useState("");
   const { roomId } = useParams();
+  const [roomName, setRoomName] = useState("");
+
+  useEffect(() => {
+    if (roomId) {
+      const roomRef = doc(db, "rooms", roomId);
+      onSnapshot(roomRef, (snapshot) => setRoomName(snapshot.data().name));
+    }
+  }, [roomId]);
 
   const sendMessage = (e) => {
     e.preventDefault();
@@ -24,7 +34,7 @@ function Chat() {
 
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 5000));
-  }, []);
+  }, [roomId]);
 
   return (
     <div className="chat">
@@ -32,7 +42,7 @@ function Chat() {
         <Avatar src={`https://avatars.dicebear.com/api/human/${seed}.svg`} />
 
         <div className="chat__headerInfo">
-          <h3>Room Name</h3>
+          <h3>{roomName}</h3>
           <p>Last seen at ...</p>
         </div>
 
