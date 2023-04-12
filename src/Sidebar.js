@@ -17,9 +17,11 @@ function Sidebar() {
 
   useEffect(() => {
     let roomsRef = collection(db, "rooms");
-    onSnapshot(roomsRef, (snapshot) => {
+    let unsubscribe = onSnapshot(roomsRef, (snapshot) => {
       setRooms(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })));
     });
+
+    return () => unsubscribe();
   }, []);
 
   return (
