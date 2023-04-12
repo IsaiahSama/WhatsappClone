@@ -1,12 +1,14 @@
 import "./App.css";
+import Sidebar from "./Sidebar";
 
 function App() {
   return (
     <div className="App">
-      <h1>
-        My favorite part was when he said it's Morbin time and morbed all over
-        the place
-      </h1>
+      <div className="app__body">
+        {/* Sidebar */}
+        <Sidebar />
+        {/* Chat */}
+      </div>
     </div>
   );
 }
