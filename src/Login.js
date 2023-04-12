@@ -1,9 +1,15 @@
 import React from "react";
 import "./Login.css";
 import { Button } from "@mui/material";
+import { auth, provider } from "./firebase";
+import { signInWithPopup } from "firebase/auth";
 
 function Login() {
-  const signIn = () => {};
+  const signIn = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => console.log(result))
+      .catch((error) => alert(error.message));
+  };
 
   return (
     <div className="login">
