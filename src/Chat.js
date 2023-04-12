@@ -10,7 +10,13 @@ import {
   Mic,
 } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  collection,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { db } from "./firebase";
 
 function Chat() {
@@ -18,11 +24,18 @@ function Chat() {
   const [input, setInput] = useState("");
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     if (roomId) {
       const roomRef = doc(db, "rooms", roomId);
       onSnapshot(roomRef, (snapshot) => setRoomName(snapshot.data().name));
+
+      const messageRef = collection(db, "rooms", roomId, "messages");
+      const q = query(messageRef, orderBy("timestamp", "asc"));
+      onSnapshot(q, (snapshot) =>
+        setMessages(snapshot.docs.map((doc) => doc.data()))
+      );
     }
   }, [roomId]);
 
@@ -60,11 +73,15 @@ function Chat() {
       </div>
 
       <div className="chat__body">
-        <p className={`chat__message ${true && "chat__receiver"}`}>
-          <span className="chat__name">Isaiah Carrington</span>
-          Herro!
-          <span className="chat__timestamp">3:52 pm</span>
-        </p>
+        {messages.map((message) => (
+          <p className={`chat__message ${true && "chat__receiver"}`}>
+            <span className="chat__name">{message.name}</span>
+            {message.message}
+            <span className="chat__timestamp">
+              {new Date(message.timestamp?.toDate()).toUTCString()}
+            </span>
+          </p>
+        ))}
       </div>
 
       <div className="chat__footer">
