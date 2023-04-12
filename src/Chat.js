@@ -10,7 +10,7 @@ import {
   Mic,
 } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "./firebase";
 
 function Chat() {
