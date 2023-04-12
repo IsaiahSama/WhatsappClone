@@ -16,8 +16,11 @@ import {
   collection,
   query,
   orderBy,
+  addDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "./firebase";
+import { useStateValue } from "./StateProvider";
 
 function Chat() {
   const [seed, setSeed] = useState("");
@@ -25,6 +28,8 @@ function Chat() {
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
+
+  const [{ user }, dispatch] = useStateValue();
 
   useEffect(() => {
     if (roomId) {
@@ -41,6 +46,13 @@ function Chat() {
 
   const sendMessage = (e) => {
     e.preventDefault();
+
+    const roomRef = collection(db, "rooms", roomId, "messages");
+    addDoc(roomRef, {
+      message: input,
+      name: user.displayName,
+      timestamp: serverTimestamp(),
+    });
 
     setInput("");
   };
