@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./SidebarChat.css";
 import { Avatar } from "@mui/material";
-import { useEffect } from "react";
+import { collection, addDoc } from "@firebase/firestore";
+import { db } from "./firebase";
 
 function SidebarChat({ id, name, addNewChat }) {
   const [seed, setSeed] = useState("");
@@ -11,6 +12,8 @@ function SidebarChat({ id, name, addNewChat }) {
 
     if (roomName) {
       // Create chat in the database.
+      const roomRef = collection(db, "rooms");
+      addDoc(roomRef, { name: roomName });
     }
   };
 
